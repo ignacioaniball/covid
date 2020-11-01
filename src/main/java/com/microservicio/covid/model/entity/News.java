@@ -45,4 +45,6 @@ public class News implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date published;
+
+    private static final long serialVersionUID = 1L;
 }
