@@ -11,13 +11,13 @@ public class AdapterFactory {
 
     @Autowired
     @Qualifier("webhoseAdapter")
-    public WebhoseAdapter webhoseAdapter;
+    public NewsAdapter newsAdapter;
 
-    public WebhoseAdapter getAdapter(String adapterName) throws Exception {
+    public NewsAdapter getAdapter(String adapterName) throws Exception {
         NewsAdapterEnum newsAdapterEnum = NewsAdapterEnum.valueOf(adapterName.toUpperCase(Locale.getDefault()));
         switch(newsAdapterEnum){
             case WEBHOSEADAPTER:
-                return webhoseAdapter;
+                return newsAdapter;
 
             default:
                 throw new Exception("Error to obtaining adapter, adapter name should not be null.");

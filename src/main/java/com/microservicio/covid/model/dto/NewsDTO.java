@@ -1,5 +1,7 @@
 package com.microservicio.covid.model.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class NewsDTO {
@@ -16,6 +18,7 @@ public class NewsDTO {
 
     private String site;
 
+    @DateTimeFormat
     private Date published;
 
     public String getUuid() {

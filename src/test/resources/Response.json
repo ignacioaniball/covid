@@ -1,0 +1,20 @@
+{
+	"predicates": [
+		{
+			"equals": {
+				"method": "GET"
+			}
+		}
+	],
+	"responses": [
+		{
+			"is": {
+				"statusCode": 200,
+				"headers": {
+					"Content-Type": "application/json"
+				},
+				"body":  "<%- stringify(filename, 'ResponseBody.json') %>"
+			}
+		}
+	]
+}
