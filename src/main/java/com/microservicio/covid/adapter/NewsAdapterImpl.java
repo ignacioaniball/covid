@@ -46,9 +46,9 @@ public class NewsAdapterImpl implements NewsAdapter {
     public NewsWrapper getNews(NewsDTO newsDTO) {
 
         NewsWrapper newsList = new NewsWrapper();
-        newsList = (NewsWrapper) newsServiceDao.findByPublished(newsDTO.getPublished());
+        newsList.setPosts( newsServiceDao.findByPublished(newsDTO.getPublished()));
 
-        if (newsList != null){
+        if (!newsList.getPosts().isEmpty()){
             LOGGER.info("Existed news for the date {} consulting.", newsDTO.getPublished());
             return newsList;
         }
@@ -57,7 +57,7 @@ public class NewsAdapterImpl implements NewsAdapter {
         MultiValueMap headersMap = new LinkedMultiValueMap();
         headersMap.add(HEADER_CONTENT_TYPE, HEADER_APPLICATION_JSON);
 
-        Map<String, String> urlParams = new HashMap<>();
+         Map<String, String> urlParams = new HashMap<>();
         urlParams.put("q", REQUEST_PARAMETER);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(newsApiUrl)
@@ -87,7 +87,9 @@ public class NewsAdapterImpl implements NewsAdapter {
             newsList = (NewsWrapper) newsResponseEntity.getBody();
             for (News news: newsList.getPosts()) {
 
-                newsServiceDao.save(news);
+                News ResponseNews = news;
+
+                newsServiceDao.save(ResponseNews);
             }
             return newsList;
         } catch (Exception e) {
