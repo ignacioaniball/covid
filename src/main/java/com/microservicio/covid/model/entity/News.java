@@ -32,22 +32,22 @@ public class News implements Serializable {
 
     @NotEmpty
     @Column(name = "news_uuid")
-    @JsonProperty("uuid")
+    @JsonProperty("news_uuid")
     private String uuid;
 
     @NotEmpty
     @Column(name = "news_url")
-    @JsonProperty("url")
+    @JsonProperty("news_url")
     private String url;
 
     @NotEmpty
     @Column(name = "news_title")
-    @JsonProperty("title")
+    @JsonProperty("news_title")
     private String title;
 
     @NotEmpty
     @Column(name = "news_author")
-    @JsonProperty("author")
+    @JsonProperty("news_author")
     private String author;
 
     @NotEmpty
@@ -62,7 +62,7 @@ public class News implements Serializable {
     @NotNull
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("published")
     private Date published;
 

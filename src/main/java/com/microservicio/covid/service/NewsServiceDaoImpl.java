@@ -1,6 +1,7 @@
 package com.microservicio.covid.service;
 
 import com.microservicio.covid.model.dao.NewsDao;
+import com.microservicio.covid.model.dao.NewsJdbcDao;
 import com.microservicio.covid.model.entity.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,9 @@ public class NewsServiceDaoImpl implements NewsServiceDao {
 
     @Autowired
     private NewsDao newsDao;
+
+    @Autowired
+    private NewsJdbcDao newsJdbcDao;
 
     @Override
     public List<News> findAll() {
@@ -40,6 +44,6 @@ public class NewsServiceDaoImpl implements NewsServiceDao {
     @Override
     @Query
     public List<News> findByPublished(Date published) {
-        return null;
+        return newsJdbcDao.findByDate(published);
     }
 }

@@ -19,21 +19,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/v1")
 public class NewsController {
 
     public Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
-    private String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+    private String DATE_FORMAT = "yyyy-MM-dd";
     @Autowired
     private NewsService service;
 
+    /*
+
+     */
     @GetMapping(value = "/news", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Retrieve News information from provider.",
             notes = "News form Argentinian country.", response = News.class)
@@ -44,9 +45,8 @@ public class NewsController {
         NewsWrapper weatherInformation;
 
         try {
-            DateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.UK);
-            format.setTimeZone(TimeZone.getTimeZone("Africa/Addis_Ababa"));
             NewsDTO newsDTO = new NewsDTO();
+            SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
             newsDTO.setPublished(format.parse(String.valueOf(published)));
             weatherInformation = service.getNewsWrapperData(newsDTO);
             return new ResponseEntity<>(weatherInformation, HttpStatus.OK);

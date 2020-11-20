@@ -18,7 +18,7 @@ public class NewsDTO {
 
     private String site;
 
-    @DateTimeFormat
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date published;
 
     public String getUuid() {
