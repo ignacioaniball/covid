@@ -1,4 +1,4 @@
-package com.microservicio.covid;
+package com.microservicio.covid.integrationTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

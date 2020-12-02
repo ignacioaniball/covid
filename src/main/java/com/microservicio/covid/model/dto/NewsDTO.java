@@ -10,6 +10,8 @@ public class NewsDTO {
 
     private String url;
 
+    private String source;
+
     private String title;
 
     private String text;

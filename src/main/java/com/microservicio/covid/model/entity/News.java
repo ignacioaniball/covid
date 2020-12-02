@@ -17,6 +17,7 @@ import java.util.Date;
 @JsonPropertyOrder({
         "uuid",
         "url",
+        "thread",
         "parent_url",
         "author",
         "published",
@@ -41,6 +42,11 @@ public class News implements Serializable {
     private String url;
 
     @NotEmpty
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JsonProperty("thread")
+    private NewsDetail newsDetail;
+
+    @NotEmpty
     @Column(name = "news_title")
     @JsonProperty("news_title")
     private String title;
@@ -49,10 +55,6 @@ public class News implements Serializable {
     @Column(name = "news_author")
     @JsonProperty("news_author")
     private String author;
-
-    @NotEmpty
-    @Column
-    private String site;
 
     @NotEmpty
     @Column
@@ -116,16 +118,6 @@ public class News implements Serializable {
         this.author = author;
     }
 
-    @JsonProperty("site")
-    public String getSite() {
-        return site;
-    }
-
-    @JsonProperty("site")
-    public void setSite(String site) {
-        this.site = site;
-    }
-
     @JsonProperty("published")
     public Date getPublished() {
         return published;
@@ -134,6 +126,14 @@ public class News implements Serializable {
     @JsonProperty("published")
     public void setPublished(Date published) {
         this.published = published;
+    }
+
+    public NewsDetail getNewsDetail() {
+        return newsDetail;
+    }
+
+    public void setNewsDetail(NewsDetail newsDetail) {
+        this.newsDetail = newsDetail;
     }
 
     public static long getSerialVersionUID() {

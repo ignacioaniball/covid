@@ -1,4 +1,4 @@
-package com.microservicio.covid;
+package com.microservicio.covid.integrationTest;
 
 
 import io.restassured.RestAssured;

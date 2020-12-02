@@ -29,14 +29,22 @@ public class NewsServiceImpl implements NewsService{
 
         try {
             initAdapter();
-            NewsWrapper bunchesNewResponse = adapter.getNews(newsDto);
-            return bunchesNewResponse;
+            NewsWrapper bunchesNewsResponse = adapter.getNews(newsDto);
+            return bunchesNewsResponse;
 
         } catch (Exception e) {
             LOGGER.error("Error retrieving News from adapter.");
 
             throw e;
         }
+    }
+
+    @Override
+    public NewsWrapper getNewsBySource(NewsDTO newsDto) throws Exception {
+        LOGGER.info("Get news search by source.");
+        initAdapter();
+        NewsWrapper bunchesNewsResponse = adapter.getNewsBySource(newsDto);
+        return bunchesNewsResponse;
     }
 
     protected void initAdapter() throws Exception {
