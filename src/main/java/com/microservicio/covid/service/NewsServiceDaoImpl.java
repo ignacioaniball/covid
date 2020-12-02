@@ -46,4 +46,9 @@ public class NewsServiceDaoImpl implements NewsServiceDao {
     public List<News> findByPublished(Date published) {
         return newsJdbcDao.findByDate(published);
     }
+
+    @Override
+    public List<News> findBySource(String source) {
+        return newsJdbcDao.findBySource(source);
+    }
 }

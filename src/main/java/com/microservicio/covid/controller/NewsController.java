@@ -42,14 +42,14 @@ public class NewsController {
     public ResponseEntity getNews(
             @ApiParam(name = "published", value = "Date published of news.", required = true) @RequestParam(required = true) String published) throws Exception {
 
-        NewsWrapper weatherInformation;
+        NewsWrapper newsInformation;
 
         try {
             NewsDTO newsDTO = new NewsDTO();
             SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
             newsDTO.setPublished(format.parse(String.valueOf(published)));
-            weatherInformation = service.getNewsWrapperData(newsDTO);
-            return new ResponseEntity<>(weatherInformation, HttpStatus.OK);
+            newsInformation = service.getNewsWrapperData(newsDTO);
+            return new ResponseEntity<>(newsInformation, HttpStatus.OK);
         } catch (ParseException  e) {
             LOGGER.error("Error parsing {} variable.", published);
             return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,4 +62,24 @@ public class NewsController {
             return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value = "/news/filter/source", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Retrieve News information from provider with the filter sending",
+        notes = "News from Argentinian country.", response = News.class)
+    public ResponseEntity getNewsFilter(
+            @ApiParam(name = "source", value = "source of news.", required = true) @RequestParam(required = true) String source,
+            @ApiParam(name = "title", value = "title of news.", required = false) @RequestParam(required = false) String title,
+            @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published){
+
+        NewsWrapper newsWrapper = new NewsWrapper();
+        try{
+            NewsDTO newsDTO = new NewsDTO();
+            newsDTO.setSite(source);
+            newsWrapper = service.getNewsBySource(newsDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity(newsWrapper, HttpStatus.OK);
+    }
+
 }

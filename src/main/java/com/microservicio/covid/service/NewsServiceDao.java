@@ -16,4 +16,6 @@ public interface NewsServiceDao {
     public void delete(Long id);
 
     List<News> findByPublished(Date published);
+
+    List<News> findBySource(String source);
 }

@@ -97,6 +97,16 @@ public class NewsAdapterImpl implements NewsAdapter {
         }
         return null;
     }
+
+    @Override
+    public NewsWrapper getNewsBySource(NewsDTO newsDto) {
+
+        NewsWrapper newsBySource = new NewsWrapper();
+        LOGGER.info("Obtain news information for a given source.");
+        newsBySource.setPosts( newsServiceDao.findBySource(newsDto.getSite()));
+        return newsBySource;
+    }
+
     public RestTemplate createRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
