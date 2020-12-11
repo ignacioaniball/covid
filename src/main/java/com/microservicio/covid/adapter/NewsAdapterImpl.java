@@ -4,7 +4,7 @@ import com.microservicio.covid.controller.NewsController;
 import com.microservicio.covid.model.dto.NewsDTO;
 import com.microservicio.covid.model.entity.News;
 import com.microservicio.covid.model.entity.NewsWrapper;
-import com.microservicio.covid.service.NewsServiceDao;
+import com.microservicio.covid.service.NewsDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +28,24 @@ import java.util.Map;
 public class NewsAdapterImpl implements NewsAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
-
+    private static final String REQUEST_PARAMETER = "coronavirus casos positivos  language:spanish thread.country:AR thread.site_type:news thread.site:telefenoticias.com.ar thread.title:Coronavirus en Argentina";
+    private static final String SORT = "crawled";
+    private static final String HEADER_APPLICATION_JSON = "application/json";
+    private static final String HEADER_CONTENT_TYPE = "Content-Type";
     @Value("${news.default.url}")
     private String newsApiUrl;
     @Value("${news.default.token}")
     private String newsToken;
-    private static final String  REQUEST_PARAMETER = "coronavirus casos positivos  language:spanish thread.country:AR thread.site_type:news thread.site:telefenoticias.com.ar thread.title:Coronavirus en Argentina";
-    private static final String  SORT = "crawled";
-
-    private static final String HEADER_APPLICATION_JSON = "application/json";
-    private static final String HEADER_CONTENT_TYPE = "Content-Type";
-
     @Autowired
-    private NewsServiceDao newsServiceDao;
+    private NewsDao newsDao;
 
     @Override
     public NewsWrapper getNews(NewsDTO newsDTO) {
 
         NewsWrapper newsList = new NewsWrapper();
-        newsList.setPosts( newsServiceDao.findByPublished(newsDTO.getPublished()));
+        newsList.setPosts(newsDao.findByPublished(newsDTO.getPublished()));
 
-        if (!newsList.getPosts().isEmpty()){
+        if (!newsList.getPosts().isEmpty()) {
             LOGGER.info("Existed news for the date {} consulting.", newsDTO.getPublished());
             return newsList;
         }
@@ -57,13 +54,13 @@ public class NewsAdapterImpl implements NewsAdapter {
         MultiValueMap headersMap = new LinkedMultiValueMap();
         headersMap.add(HEADER_CONTENT_TYPE, HEADER_APPLICATION_JSON);
 
-         Map<String, String> urlParams = new HashMap<>();
+        Map<String, String> urlParams = new HashMap<>();
         urlParams.put("q", REQUEST_PARAMETER);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(newsApiUrl)
                 .queryParam("token", newsToken)
-                .queryParam( "format", "json")
-                .queryParam( "sort", SORT)
+                .queryParam("format", "json")
+                .queryParam("sort", SORT)
                 .encode();
 
         LOGGER.info("log request headers");
@@ -78,18 +75,18 @@ public class NewsAdapterImpl implements NewsAdapter {
 
         try {
             LOGGER.info("Request =");
-            LOGGER.info(uriBuilder.toString() + HttpMethod.GET.toString() + newsRequestEntity.toString() );
+            LOGGER.info(uriBuilder.toString() + HttpMethod.GET.toString() + newsRequestEntity.toString());
             newsResponseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(urlParams).toUri(), HttpMethod.GET, newsRequestEntity, NewsWrapper.class);
             if (newsResponseEntity == null || newsResponseEntity.getBody() == null) {
                 LOGGER.error("News information are missing in the response.");
                 throw new Exception("News information are missing in the response.");
             }
             newsList = (NewsWrapper) newsResponseEntity.getBody();
-            for (News news: newsList.getPosts()) {
+            for (News news : newsList.getPosts()) {
 
                 News ResponseNews = news;
 
-                newsServiceDao.save(ResponseNews);
+                newsDao.save(ResponseNews);
             }
             return newsList;
         } catch (Exception e) {
@@ -103,7 +100,7 @@ public class NewsAdapterImpl implements NewsAdapter {
 
         NewsWrapper newsBySource = new NewsWrapper();
         LOGGER.info("Obtain news information for a given source.");
-        newsBySource.setPosts( newsServiceDao.findBySource(newsDto.getSite()));
+        newsBySource.setPosts(newsDao.findBySource(newsDto.getSite()));
         return newsBySource;
     }
 

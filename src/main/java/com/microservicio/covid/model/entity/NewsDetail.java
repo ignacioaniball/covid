@@ -1,4 +1,3 @@
-
 package com.microservicio.covid.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -11,30 +10,31 @@ import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "uuid",
-    "url",
-    "site_full",
-    "site",
-    "site_section",
-    "site_categories",
-    "section_title",
-    "title",
-    "title_full",
-    "published",
-    "replies_count",
-    "participants_count",
-    "site_type",
-    "country",
-    "spam_score",
-    "main_image",
-    "performance_score",
-    "domain_rank",
-    "social"
+        "uuid",
+        "url",
+        "site_full",
+        "site",
+        "site_section",
+        "site_categories",
+        "section_title",
+        "title",
+        "title_full",
+        "published",
+        "replies_count",
+        "participants_count",
+        "site_type",
+        "country",
+        "spam_score",
+        "main_image",
+        "performance_score",
+        "domain_rank",
+        "social"
 })
 @Entity
 @Table(name = "news_detail")
 public class NewsDetail implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -75,7 +75,9 @@ public class NewsDetail implements Serializable {
     @JsonProperty("domain_rank")
     private Integer domainRank;
 
-    private static final long serialVersionUID = 1L;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     @JsonProperty("uuid")
     public String getUuid() {
@@ -245,10 +247,6 @@ public class NewsDetail implements Serializable {
     @JsonProperty("domain_rank")
     public void setDomainRank(Integer domainRank) {
         this.domainRank = domainRank;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
 }

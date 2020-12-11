@@ -14,25 +14,24 @@ import java.util.List;
 @Service
 public class NewsJdbcDao {
 
-    private Logger LOGGER = LoggerFactory.getLogger(NewsJdbcDao.class);
-
     @Autowired
     public JdbcTemplate jdbcTemplate;
+    private Logger LOGGER = LoggerFactory.getLogger(NewsJdbcDao.class);
 
-    public List<News> findByDate(Date published){
+    public List<News> findByDate(Date published) {
         String newsDateQuery = "SELECT * FROM midas.news WHERE create_at = ? ";
-        LOGGER.info("The query executed was: {}\n",newsDateQuery );
+        LOGGER.info("The query executed was: {}\n", newsDateQuery);
         String publishedDateRequest = published.toInstant().toString().split("T")[0];
         List newsList = jdbcTemplate.query(newsDateQuery, new NewsMapper(), publishedDateRequest);
         LOGGER.info("Obtain news with given source: {}", newsList);
         return newsList;
     }
 
-    public List<News> findBySource(String source){
+    public List<News> findBySource(String source) {
         String newsSourceQuery = "SELECT * FROM midas.news WHERE site_full = ? ";
-        LOGGER.info("The query executed was: {}\n",newsSourceQuery );
+        LOGGER.info("The query executed was: {}\n", newsSourceQuery);
         String findBySourceRequest = source.toLowerCase();
-        List newsBySource = jdbcTemplate.query(newsSourceQuery,new NewsMapper(), findBySourceRequest);
+        List newsBySource = jdbcTemplate.query(newsSourceQuery, new NewsMapper(), findBySourceRequest);
         LOGGER.info("Obtain news with given source: {}", newsBySource);
         return null;
     }

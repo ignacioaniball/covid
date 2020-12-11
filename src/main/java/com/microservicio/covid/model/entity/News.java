@@ -27,40 +27,34 @@ import java.util.Date;
 })
 public class News implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @NotEmpty
     @Column(name = "news_uuid")
     @JsonProperty("news_uuid")
     private String uuid;
-
     @NotEmpty
     @Column(name = "news_url")
     @JsonProperty("news_url")
     private String url;
-
     @NotEmpty
     @OneToOne(cascade = {CascadeType.ALL})
     @JsonProperty("thread")
     private NewsDetail newsDetail;
-
     @NotEmpty
     @Column(name = "news_title")
     @JsonProperty("news_title")
     private String title;
-
     @NotEmpty
     @Column(name = "news_author")
     @JsonProperty("news_author")
     private String author;
-
     @NotEmpty
     @Column
     @JsonProperty("language")
     private String language;
-
     @NotNull
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,7 +62,9 @@ public class News implements Serializable {
     @JsonProperty("published")
     private Date published;
 
-    private static final long serialVersionUID = 1L;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public long getId() {
         return id;
@@ -134,9 +130,5 @@ public class News implements Serializable {
 
     public void setNewsDetail(NewsDetail newsDetail) {
         this.newsDetail = newsDetail;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 }

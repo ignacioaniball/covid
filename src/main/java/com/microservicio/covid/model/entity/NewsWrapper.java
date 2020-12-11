@@ -1,4 +1,3 @@
-
 package com.microservicio.covid.model.entity;
 
 import com.fasterxml.jackson.annotation.*;
@@ -9,7 +8,7 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-    "posts"
+        "posts"
 })
 public class NewsWrapper {
 

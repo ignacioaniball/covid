@@ -1,6 +1,5 @@
 package com.microservicio.covid.service;
 
-import com.microservicio.covid.model.dao.NewsDao;
 import com.microservicio.covid.model.dao.NewsJdbcDao;
 import com.microservicio.covid.model.entity.News;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +10,10 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class NewsServiceDaoImpl implements NewsServiceDao {
+public class NewsDaoImpl implements NewsDao {
 
     @Autowired
-    private NewsDao newsDao;
+    private com.microservicio.covid.model.dao.NewsDao newsDao;
 
     @Autowired
     private NewsJdbcDao newsJdbcDao;

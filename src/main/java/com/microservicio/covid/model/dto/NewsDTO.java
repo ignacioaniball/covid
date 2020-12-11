@@ -1,26 +1,16 @@
 package com.microservicio.covid.model.dto;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
 
 public class NewsDTO {
 
     private String uuid;
-
     private String url;
-
     private String source;
-
     private String title;
-
     private String text;
-
     private String author;
-
     private String site;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date published;
 
     public String getUuid() {

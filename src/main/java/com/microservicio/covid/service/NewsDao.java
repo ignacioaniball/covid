@@ -5,15 +5,15 @@ import com.microservicio.covid.model.entity.News;
 import java.util.Date;
 import java.util.List;
 
-public interface NewsServiceDao {
+public interface NewsDao {
 
-    public List<News> findAll();
+     List<News> findAll();
 
-    public void save(News post);
+     void save(News post);
 
-    public News findOne(Long id);
+     News findOne(Long id);
 
-    public void delete(Long id);
+     void delete(Long id);
 
     List<News> findByPublished(Date published);
 

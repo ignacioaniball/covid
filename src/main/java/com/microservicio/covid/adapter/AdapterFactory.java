@@ -15,7 +15,7 @@ public class AdapterFactory {
 
     public NewsAdapter getAdapter(String adapterName) throws Exception {
         NewsAdapterEnum newsAdapterEnum = NewsAdapterEnum.valueOf(adapterName.toUpperCase(Locale.getDefault()));
-        switch(newsAdapterEnum){
+        switch (newsAdapterEnum) {
             case WEBHOSEADAPTER:
                 return newsAdapter;
 

@@ -10,46 +10,59 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 @Service
-public class NewsServiceImpl implements NewsService{
+public class NewsServiceImpl implements NewsService {
 
+    public NewsDTO newsDto = new NewsDTO();
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewsServiceImpl.class);
     private NewsAdapter adapter;
-
     @Value("${news.default.adapter}")
     private String defaultAdapter;
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsServiceImpl.class);
-
     @Autowired
     private AdapterFactory adapterFactory;
 
     @Override
-    public NewsWrapper getNewsWrapperData(NewsDTO newsDto) throws Exception {
-
+    public NewsWrapper getNewsWrapperData(String published) throws Exception {
+        initAdapter();
         LOGGER.info("Get news service. Default adapter: {}.", defaultAdapter);
-
-        try {
-            initAdapter();
-            NewsWrapper bunchesNewsResponse = adapter.getNews(newsDto);
-            return bunchesNewsResponse;
-
-        } catch (Exception e) {
-            LOGGER.error("Error retrieving News from adapter.");
-
-            throw e;
-        }
+        newsDto.setPublished(publishedParse(published));
+        return adapter.getNews(newsDto);
     }
 
     @Override
     public NewsWrapper getNewsBySource(NewsDTO newsDto) throws Exception {
-        LOGGER.info("Get news search by source.");
         initAdapter();
-        NewsWrapper bunchesNewsResponse = adapter.getNewsBySource(newsDto);
-        return bunchesNewsResponse;
+        LOGGER.info("Get news search by source.");
+        return adapter.getNewsBySource(newsDto);
     }
 
     protected void initAdapter() throws Exception {
-        if(adapter == null) {
-            adapter = adapterFactory.getAdapter(defaultAdapter);
+        try {
+            if (adapter == null) {
+                adapter = adapterFactory.getAdapter(defaultAdapter);
+            }
+        } catch (NullPointerException e) {
+            LOGGER.error("Adapter variable is Empty.");
         }
     }
+
+    public Date publishedParse(String published) {
+        String DATE_FORMAT = "yyyy-MM-dd";
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+        Date publishedParse = new Date();
+        try {
+            publishedParse = format.parse(String.valueOf(published));
+        } catch (ParseException e) {
+            LOGGER.error("Error parsing {} variable.", published);
+        } catch (NullPointerException e) {
+            LOGGER.error("The variable {} can not be null", published);
+        }
+        return publishedParse;
+    }
 }
+

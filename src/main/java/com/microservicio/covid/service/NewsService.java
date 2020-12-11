@@ -5,7 +5,7 @@ import com.microservicio.covid.model.entity.NewsWrapper;
 
 public interface NewsService {
 
-    public NewsWrapper getNewsWrapperData(NewsDTO newsDto) throws Exception;
+    NewsWrapper getNewsWrapperData(String published) throws Exception;
 
-    public NewsWrapper getNewsBySource(NewsDTO newsDto) throws Exception;
+    NewsWrapper getNewsBySource(NewsDTO newsDto) throws Exception;
 }
