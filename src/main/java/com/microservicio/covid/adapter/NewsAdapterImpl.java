@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-@Qualifier(value = "webhoseAdapter")
+@Qualifier(value = "web_hose_adapter")
 public class NewsAdapterImpl implements NewsAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);

@@ -1,6 +1,5 @@
 package com.microservicio.covid.controller;
 
-import com.microservicio.covid.model.dto.NewsDTO;
 import com.microservicio.covid.model.entity.News;
 import com.microservicio.covid.model.entity.NewsWrapper;
 import com.microservicio.covid.service.NewsService;
@@ -44,14 +43,8 @@ public class NewsController {
     public ResponseEntity getNewsFilter(
             @ApiParam(name = "source", value = "source of news.", required = true) @RequestParam(required = true) String source,
             @ApiParam(name = "title", value = "title of news.", required = false) @RequestParam(required = false) String title,
-            @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published) {
-        try {
-            NewsDTO newsDTO = new NewsDTO();
-            newsDTO.setSite(source);
-            newsWrapper = service.getNewsBySource(newsDTO);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published) throws Exception {
+            newsWrapper = service.getNewsBySource(source);
         return new ResponseEntity(newsWrapper, HttpStatus.OK);
     }
 

@@ -13,7 +13,7 @@ import java.util.Map;
 public class NewsWrapper {
 
     @JsonProperty("posts")
-    private List<News> news = null;
+    private List<News> news;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

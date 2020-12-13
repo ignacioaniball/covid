@@ -1,6 +1,7 @@
 package com.microservicio.covid.service;
 
-import com.microservicio.covid.model.dao.NewsJdbcDao;
+import com.microservicio.covid.model.dao.NewsDaoJdk;
+import com.microservicio.covid.model.dao.NewsDaoJdbc;
 import com.microservicio.covid.model.entity.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -13,10 +14,10 @@ import java.util.List;
 public class NewsDaoImpl implements NewsDao {
 
     @Autowired
-    private com.microservicio.covid.model.dao.NewsDao newsDao;
+    private NewsDaoJdk newsDao;
 
     @Autowired
-    private NewsJdbcDao newsJdbcDao;
+    private NewsDaoJdbc newsJdbcDao;
 
     @Override
     public List<News> findAll() {

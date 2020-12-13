@@ -31,30 +31,37 @@ public class News implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @NotEmpty
-    @Column(name = "news_uuid")
+    @Column(name = "uuid")
     @JsonProperty("news_uuid")
     private String uuid;
+
     @NotEmpty
-    @Column(name = "news_url")
+    @Column(name = "url")
     @JsonProperty("news_url")
     private String url;
+
     @NotEmpty
     @OneToOne(cascade = {CascadeType.ALL})
     @JsonProperty("thread")
     private NewsDetail newsDetail;
+
     @NotEmpty
-    @Column(name = "news_title")
+    @Column(name = "title")
     @JsonProperty("news_title")
     private String title;
+
     @NotEmpty
-    @Column(name = "news_author")
+    @Column(name = "author")
     @JsonProperty("news_author")
     private String author;
+
     @NotEmpty
     @Column
     @JsonProperty("language")
     private String language;
+
     @NotNull
     @Column(name = "create_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -74,52 +81,42 @@ public class News implements Serializable {
         this.id = id;
     }
 
-    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
-    @JsonProperty("uuid")
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    @JsonProperty("url")
     public String getUrl() {
         return url;
     }
 
-    @JsonProperty("url")
     public void setUrl(String url) {
         this.url = url;
     }
 
-    @JsonProperty("title")
     public String getTitle() {
         return title;
     }
 
-    @JsonProperty("title")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @JsonProperty("author")
     public String getAuthor() {
         return author;
     }
 
-    @JsonProperty("author")
     public void setAuthor(String author) {
         this.author = author;
     }
 
-    @JsonProperty("published")
     public Date getPublished() {
         return published;
     }
 
-    @JsonProperty("published")
     public void setPublished(Date published) {
         this.published = published;
     }

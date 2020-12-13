@@ -10,13 +10,13 @@ import java.util.Locale;
 public class AdapterFactory {
 
     @Autowired
-    @Qualifier("webhoseAdapter")
-    public NewsAdapter newsAdapter;
+    @Qualifier("web_hose_adapter")
+    private NewsAdapter newsAdapter;
 
     public NewsAdapter getAdapter(String adapterName) throws Exception {
         NewsAdapterEnum newsAdapterEnum = NewsAdapterEnum.valueOf(adapterName.toUpperCase(Locale.getDefault()));
         switch (newsAdapterEnum) {
-            case WEBHOSEADAPTER:
+            case WEB_HOSE_ADAPTER:
                 return newsAdapter;
 
             default:

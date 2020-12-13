@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>covid</name>
-	<description>Microservice to obtained information update about amount of contagions for covid.</description>
+	<description>Microservice to obtain information update about amount of contagions for covid.</description>
 
 	<properties>
 		<java.version>11</java.version>
