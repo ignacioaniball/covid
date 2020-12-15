@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -82,12 +83,7 @@ public class NewsAdapterImpl implements NewsAdapter {
                 throw new Exception("News information are missing in the response.");
             }
             newsList = (NewsWrapper) newsResponseEntity.getBody();
-            for (News news : newsList.getPosts()) {
-
-                News ResponseNews = news;
-
-                newsDao.save(ResponseNews);
-            }
+            newsDao.saveAll((List<News>) newsList.getPosts());
             return newsList;
         } catch (Exception e) {
             e.printStackTrace();

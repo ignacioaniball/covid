@@ -11,7 +11,9 @@ public interface NewsDao {
 
      void save(News post);
 
-     News findOne(Long id);
+    void saveAll(List<News> newsList);
+
+    News findOne(Long id);
 
      void delete(Long id);
 

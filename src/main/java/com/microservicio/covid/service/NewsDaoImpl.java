@@ -31,6 +31,11 @@ public class NewsDaoImpl implements NewsDao {
     }
 
     @Override
+    public void saveAll(List<News> newsList){
+        newsDao.saveAll(newsList);
+    }
+
+    @Override
     public News findOne(Long id) {
         return newsDao.findById(id).orElse(null);
     }
