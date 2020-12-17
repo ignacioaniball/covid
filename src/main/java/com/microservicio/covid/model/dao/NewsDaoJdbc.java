@@ -16,7 +16,7 @@ public class NewsDaoJdbc {
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
-    private Logger LOGGER = LoggerFactory.getLogger(NewsDaoJdbc.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(NewsDaoJdbc.class);
 
     public List<News> findByDate(Date published) {
         String newsDateQuery = "SELECT * FROM news WHERE create_at = ? ";
@@ -33,6 +33,6 @@ public class NewsDaoJdbc {
         List<News> newsBySource = jdbcTemplate.query(newsSourceQuery, new NewsMapper(), findBySourceRequest);
         LOGGER.info("The query executed was: {}\n", newsSourceQuery);
         LOGGER.info("Obtain news with given source: {}", newsBySource);
-        return null;
+        return newsBySource;
     }
 }

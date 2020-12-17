@@ -15,7 +15,7 @@ public class NewsWrapper {
     @JsonProperty("posts")
     private List<News> news;
     @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+    private Map<String, Object> additionalProperties = new HashMap<>();
 
     @JsonProperty("posts")
     public List<News> getPosts() {

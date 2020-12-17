@@ -7,8 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,8 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 public class NewsController {
 
-    public NewsWrapper newsWrapper = new NewsWrapper();
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
+    private NewsWrapper newsWrapper = new NewsWrapper();
     @Autowired
     private NewsService service;
 
@@ -31,8 +28,8 @@ public class NewsController {
     @ApiOperation(value = "Retrieve News information from provider.",
             notes = "News form Argentinian country.", response = News.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
-    public ResponseEntity getNews(
-            @ApiParam(name = "published", value = "Date published of news.", required = true) @RequestParam(required = true) String published) throws Exception {
+    public ResponseEntity<NewsWrapper> getNews(
+            @ApiParam(name = "published", value = "Date published of news.", required = true) @RequestParam(required = true) String published){
             newsWrapper = service.getNewsWrapperData(published);
             return new ResponseEntity<>(newsWrapper, HttpStatus.OK);
     }
@@ -40,12 +37,12 @@ public class NewsController {
     @GetMapping(value = "/news/filter/source", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Retrieve News information from provider with the filter sending",
             notes = "News from Argentinian country.", response = News.class)
-    public ResponseEntity getNewsFilter(
+    public ResponseEntity<NewsWrapper> getNewsFilter(
             @ApiParam(name = "source", value = "source of news.", required = true) @RequestParam(required = true) String source,
             @ApiParam(name = "title", value = "title of news.", required = false) @RequestParam(required = false) String title,
-            @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published) throws Exception {
+            @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published){
             newsWrapper = service.getNewsBySource(source);
-        return new ResponseEntity(newsWrapper, HttpStatus.OK);
+        return new ResponseEntity<>(newsWrapper, HttpStatus.OK);
     }
 
 }

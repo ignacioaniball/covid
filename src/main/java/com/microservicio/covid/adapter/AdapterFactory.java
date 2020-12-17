@@ -13,14 +13,14 @@ public class AdapterFactory {
     @Qualifier("web_hose_adapter")
     private NewsAdapter newsAdapter;
 
-    public NewsAdapter getAdapter(String adapterName) throws Exception {
+    public NewsAdapter getAdapter(String adapterName) {
         NewsAdapterEnum newsAdapterEnum = NewsAdapterEnum.valueOf(adapterName.toUpperCase(Locale.getDefault()));
-        switch (newsAdapterEnum) {
+        switch(newsAdapterEnum){
             case WEB_HOSE_ADAPTER:
                 return newsAdapter;
 
             default:
-                throw new Exception("Error to obtaining adapter, adapter name should not be null.");
+                throw new NullPointerException("Error to obtaining adapter, adapter name should not be null.");
 
         }
     }

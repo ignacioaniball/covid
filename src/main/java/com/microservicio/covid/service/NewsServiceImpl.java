@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,8 +19,8 @@ import java.util.Locale;
 @Service
 public class NewsServiceImpl implements NewsService {
 
-    public String DATE_FORMAT = "yyyy-MM-dd";
-    public NewsDTO newsDto = new NewsDTO();
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private NewsDTO newsDto = new NewsDTO();
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsServiceImpl.class);
     private NewsAdapter adapter;
     @Value("${news.default.adapter}")
@@ -28,7 +29,7 @@ public class NewsServiceImpl implements NewsService {
     private AdapterFactory adapterFactory;
 
     @Override
-    public NewsWrapper getNewsWrapperData(String published) throws Exception {
+    public NewsWrapper getNewsWrapperData(String published) {
         initAdapter();
         LOGGER.info("Get news service. Default adapter: {}.", defaultAdapter);
         newsDto.setPublished(publishedParse(published));
@@ -36,32 +37,35 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsWrapper getNewsBySource(String source) throws Exception {
+    public NewsWrapper getNewsBySource(String source){
         initAdapter();
         LOGGER.info("Obtaining news information for a given source: {}.", source);
         newsDto.setSite(source);
         return adapter.getNewsBySource(newsDto);
     }
 
-    protected void initAdapter() throws Exception {
+    protected void initAdapter(){
         try {
             if (adapter == null) {
                 adapter = adapterFactory.getAdapter(defaultAdapter);
             }
         } catch (NullPointerException e) {
-            LOGGER.error("Adapter variable is Empty.", e.getMessage());
+            LOGGER.error("Adapter variable is Empty.");
         }
     }
 
-    public Date publishedParse(String published) {
+    private Date publishedParse(String published) {
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
         Date publishedParse = new Date();
         try {
+            if (StringUtils.isEmpty(published)){
+                throw new NullPointerException("The published date can not be empty.");
+            }
             publishedParse = format.parse(String.valueOf(published));
         } catch (ParseException e) {
-            LOGGER.error("Error parsing {} variable.", published, e.getMessage());
+            LOGGER.error("Error parsing {} variable.", published);
         } catch (NullPointerException e) {
-            LOGGER.error("The variable {} can not be null", published, e.getMessage());
+            LOGGER.error("The variable {} can not be null", published);
         }
         return publishedParse;
     }

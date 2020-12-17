@@ -1,6 +1,5 @@
 package com.microservicio.covid.adapter;
 
-import com.microservicio.covid.controller.NewsController;
 import com.microservicio.covid.model.dto.NewsDTO;
 import com.microservicio.covid.model.entity.News;
 import com.microservicio.covid.model.entity.NewsWrapper;
@@ -15,8 +14,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,7 +29,7 @@ import java.util.Map;
 @Qualifier(value = "web_hose_adapter")
 public class NewsAdapterImpl implements NewsAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewsAdapterImpl.class);
     private static final String REQUEST_PARAMETER = "coronavirus casos positivos  language:spanish thread.country:AR thread.site_type:news thread.site:telefenoticias.com.ar thread.title:Coronavirus en Argentina";
     private static final String SORT = "crawled";
     private static final String HEADER_APPLICATION_JSON = "application/json";
@@ -44,15 +45,16 @@ public class NewsAdapterImpl implements NewsAdapter {
     public NewsWrapper getNews(NewsDTO newsDTO) {
 
         NewsWrapper newsList = new NewsWrapper();
-        newsList.setPosts(newsDao.findByPublished(newsDTO.getPublished()));
 
-        if (!newsList.getPosts().isEmpty()) {
+        List<News> news = newsDao.findByPublished(newsDTO.getPublished());
+        if (!CollectionUtils.isEmpty(news)) {
+            newsList.setPosts(newsDao.findByPublished(newsDTO.getPublished()));
             LOGGER.info("Existed news for the date {} consulting.", newsDTO.getPublished());
             return newsList;
         }
 
         //Headers
-        MultiValueMap headersMap = new LinkedMultiValueMap();
+        MultiValueMap<String, String> headersMap = new LinkedMultiValueMap<>();
         headersMap.add(HEADER_CONTENT_TYPE, HEADER_APPLICATION_JSON);
 
         Map<String, String> urlParams = new HashMap<>();
@@ -65,27 +67,24 @@ public class NewsAdapterImpl implements NewsAdapter {
                 .encode();
 
         LOGGER.info("log request headers");
-        LOGGER.info(headersMap.toString());
-
-        LOGGER.info("log request ");
-        LOGGER.info(uriBuilder.buildAndExpand(urlParams).toUriString());
-        HttpEntity newsRequestEntity = new HttpEntity(headersMap);
+        String uri = uriBuilder.buildAndExpand(urlParams).toUriString();
+        LOGGER.info(uri);
+        HttpEntity<String> newsRequestEntity = new HttpEntity<>(headersMap);
 
         RestTemplate restTemplate = createRestTemplate();
-        ResponseEntity newsResponseEntity;
+        ResponseEntity<NewsWrapper> newsResponseEntity;
 
         try {
-            LOGGER.info("Request =");
-            LOGGER.info(uriBuilder.toString() + HttpMethod.GET.toString() + newsRequestEntity.toString());
+            LOGGER.info("Request = {}", newsRequestEntity);
             newsResponseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(urlParams).toUri(), HttpMethod.GET, newsRequestEntity, NewsWrapper.class);
-            if (newsResponseEntity == null || newsResponseEntity.getBody() == null) {
+            if (StringUtils.isEmpty(newsResponseEntity.getBody())) {
                 LOGGER.error("News information are missing in the response.");
-                throw new Exception("News information are missing in the response.");
+                throw new NullPointerException("News information are missing in the response.");
             }
-            newsList = (NewsWrapper) newsResponseEntity.getBody();
-            newsDao.saveAll((List<News>) newsList.getPosts());
-            return newsList;
-        } catch (Exception e) {
+                newsList = newsResponseEntity.getBody();
+                newsDao.saveAll(newsList.getPosts());
+                return newsList;
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return null;

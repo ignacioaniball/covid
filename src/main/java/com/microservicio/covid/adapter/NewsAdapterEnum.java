@@ -2,10 +2,10 @@ package com.microservicio.covid.adapter;
 
 public enum NewsAdapterEnum {
 
-    WEB_HOSE_ADAPTER("web_hose_adapter");
+    WEB_HOSE_ADAPTER();
 
     protected String value;
 
-    NewsAdapterEnum(String adapter) {
+    NewsAdapterEnum() {
     }
 }
