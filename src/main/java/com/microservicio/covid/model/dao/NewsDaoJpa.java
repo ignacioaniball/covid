@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-@Repository
+@Repository("jpa")
 public class NewsDaoJpa implements NewsDao {
 
     @Autowired

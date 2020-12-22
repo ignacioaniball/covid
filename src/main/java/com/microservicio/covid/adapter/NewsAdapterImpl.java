@@ -39,6 +39,7 @@ public class NewsAdapterImpl implements NewsAdapter {
     @Value("${news.default.token}")
     private String newsToken;
     @Autowired
+    @Qualifier("jpa")
     private NewsDao newsDao;
 
     @Override

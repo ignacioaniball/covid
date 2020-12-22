@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
 
-@Repository
+@Repository("jdbc")
 public class NewsDaoJdbc implements NewsDao{
 
     @Autowired
