@@ -39,7 +39,7 @@ public class NewsController {
             @ApiParam(name = "source", value = "source of news.", required = true) @RequestParam(required = true) String source,
             @ApiParam(name = "title", value = "title of news.", required = false) @RequestParam(required = false) String title,
             @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published){
-        return new ResponseEntity<>(service.getNewsBySource(source), HttpStatus.OK);
+        return new ResponseEntity<>(service.getNewsBySite(source), HttpStatus.OK);
     }
 
 }

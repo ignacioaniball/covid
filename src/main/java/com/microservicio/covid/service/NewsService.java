@@ -6,5 +6,5 @@ public interface NewsService {
 
     NewsWrapper getNewsWrapperData(String published);
 
-    NewsWrapper getNewsBySource(String webSite);
+    NewsWrapper getNewsBySite(String webSite);
 }

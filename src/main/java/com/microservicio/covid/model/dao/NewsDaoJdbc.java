@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -28,12 +29,12 @@ public class NewsDaoJdbc implements NewsDao{
         return newsList;
     }
 
-    public List<News> findByWebSite(String webSite) {
-        if (webSite.isEmpty()) {
-            throw new NullPointerException("The webSite variable can not be empty.");
+    public List<News> findBySite(String site) {
+        if (StringUtils.isEmpty(site)) {
+            throw new NullPointerException("The site variable can not be empty.");
         }
         String newsSourceQuery = "SELECT * FROM news WHERE site_full = ? ";
-        String findBySourceRequest = webSite.toLowerCase();
+        String findBySourceRequest = site.toLowerCase();
         List<News> newsBySource = jdbcTemplate.query(newsSourceQuery, new NewsMapper(), findBySourceRequest);
         LOGGER.info("The query executed was: {}\n", newsSourceQuery);
         return newsBySource;

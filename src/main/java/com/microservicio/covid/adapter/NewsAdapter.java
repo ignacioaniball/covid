@@ -8,6 +8,6 @@ public interface NewsAdapter {
 
     NewsWrapper getNews(Date published);
 
-    NewsWrapper getNewsBySource(String webSite);
+    NewsWrapper getNewsBySite(String site);
 
 }

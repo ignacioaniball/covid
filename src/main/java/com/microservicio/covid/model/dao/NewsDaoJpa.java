@@ -51,7 +51,7 @@ public class NewsDaoJpa implements NewsDao {
     }
 
     @Override
-    public List<News> findByWebSite(String source) {
-        return newsJdbcDao.findByWebSite(source);
+    public List<News> findBySite(String source) {
+        return newsJdbcDao.findBySite(source);
     }
 }

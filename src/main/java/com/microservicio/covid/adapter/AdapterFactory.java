@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.Locale;
-
 @Component
 public class AdapterFactory {
 
@@ -14,11 +12,10 @@ public class AdapterFactory {
     private NewsAdapter newsAdapter;
 
     public NewsAdapter getAdapter(String adapterName) {
-        NewsAdapterEnum newsAdapterEnum = NewsAdapterEnum.valueOf(adapterName.toUpperCase(Locale.getDefault()));
-        if (newsAdapterEnum.name().equalsIgnoreCase("WEB_HOSE_ADAPTER")) {
+        if (NewsAdapterEnum.WEB_HOSE_ADAPTER.name().equalsIgnoreCase(adapterName)) {
             return newsAdapter;
         } else
-            throw new NullPointerException("Error to obtaining adapter, adapter name should not be null.");
+            throw new NullPointerException("Error to obtain adapter, adapter name should not be null.");
     }
 }
 

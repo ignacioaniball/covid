@@ -34,10 +34,10 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public NewsWrapper getNewsBySource(String webSite){
+    public NewsWrapper getNewsBySite(String site){
         initAdapter();
-        LOGGER.info("Obtaining news information for a given webSite: {}.", webSite);
-        return adapter.getNewsBySource(webSite);
+        LOGGER.info("Obtaining news information for a given site: {}.", site);
+        return adapter.getNewsBySite(site);
     }
 
     private void initAdapter(){

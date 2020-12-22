@@ -86,17 +86,17 @@ public class NewsAdapterImpl implements NewsAdapter {
                 newsDao.saveAll(newsList.getPosts());
                 return newsList;
         } catch (IllegalArgumentException e) {
-            LOGGER.error("News information can not be null.",e.getCause());
+            LOGGER.error("The argument to be save is illegal or inappropriate.",e.getCause());
         }
         return null;
     }
 
     @Override
-    public NewsWrapper getNewsBySource(String webSite) {
+    public NewsWrapper getNewsBySite(String site) {
 
         NewsWrapper newsBySource = new NewsWrapper();
         LOGGER.info("Obtain news information for a given source.");
-        newsBySource.setPosts(newsDao.findByWebSite(webSite));
+        newsBySource.setPosts(newsDao.findBySite(site));
         return newsBySource;
     }
 
