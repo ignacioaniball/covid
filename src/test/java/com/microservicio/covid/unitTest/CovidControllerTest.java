@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CovidApplicationTests {
+class CovidControllerTest {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    //@DisplayName("getNews with valid value.")
+    void getNewsWithValidValue(){
 
+    }
 }

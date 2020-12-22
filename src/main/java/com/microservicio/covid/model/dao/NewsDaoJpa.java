@@ -1,23 +1,21 @@
-package com.microservicio.covid.service;
+package com.microservicio.covid.model.dao;
 
-import com.microservicio.covid.model.dao.NewsDao;
-import com.microservicio.covid.model.dao.NewsJdbcDao;
 import com.microservicio.covid.model.entity.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
-@Service
-public class NewsServiceDaoImpl implements NewsServiceDao {
+@Repository("jpa")
+public class NewsDaoJpa implements NewsDao {
 
     @Autowired
-    private NewsDao newsDao;
+    private NewsDaoJdk newsDao;
 
     @Autowired
-    private NewsJdbcDao newsJdbcDao;
+    private NewsDaoJdbc newsJdbcDao;
 
     @Override
     public List<News> findAll() {
@@ -28,6 +26,11 @@ public class NewsServiceDaoImpl implements NewsServiceDao {
     public void save(News post) {
 
         newsDao.save(post);
+    }
+
+    @Override
+    public void saveAll(List<News> newsList){
+        newsDao.saveAll(newsList);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class NewsServiceDaoImpl implements NewsServiceDao {
     }
 
     @Override
-    public List<News> findBySource(String source) {
-        return newsJdbcDao.findBySource(source);
+    public List<News> findBySite(String source) {
+        return newsJdbcDao.findBySite(source);
     }
 }

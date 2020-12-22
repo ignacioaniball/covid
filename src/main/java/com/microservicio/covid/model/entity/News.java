@@ -27,17 +27,18 @@ import java.util.Date;
 })
 public class News implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotEmpty
-    @Column(name = "news_uuid")
+    @Column(name = "uuid")
     @JsonProperty("news_uuid")
     private String uuid;
 
     @NotEmpty
-    @Column(name = "news_url")
+    @Column(name = "url")
     @JsonProperty("news_url")
     private String url;
 
@@ -47,12 +48,12 @@ public class News implements Serializable {
     private NewsDetail newsDetail;
 
     @NotEmpty
-    @Column(name = "news_title")
+    @Column(name = "title")
     @JsonProperty("news_title")
     private String title;
 
     @NotEmpty
-    @Column(name = "news_author")
+    @Column(name = "author")
     @JsonProperty("news_author")
     private String author;
 
@@ -68,7 +69,9 @@ public class News implements Serializable {
     @JsonProperty("published")
     private Date published;
 
-    private static final long serialVersionUID = 1L;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public long getId() {
         return id;
@@ -78,52 +81,42 @@ public class News implements Serializable {
         this.id = id;
     }
 
-    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
-    @JsonProperty("uuid")
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    @JsonProperty("url")
     public String getUrl() {
         return url;
     }
 
-    @JsonProperty("url")
     public void setUrl(String url) {
         this.url = url;
     }
 
-    @JsonProperty("title")
     public String getTitle() {
         return title;
     }
 
-    @JsonProperty("title")
     public void setTitle(String title) {
         this.title = title;
     }
 
-    @JsonProperty("author")
     public String getAuthor() {
         return author;
     }
 
-    @JsonProperty("author")
     public void setAuthor(String author) {
         this.author = author;
     }
 
-    @JsonProperty("published")
     public Date getPublished() {
         return published;
     }
 
-    @JsonProperty("published")
     public void setPublished(Date published) {
         this.published = published;
     }
@@ -134,9 +127,5 @@ public class News implements Serializable {
 
     public void setNewsDetail(NewsDetail newsDetail) {
         this.newsDetail = newsDetail;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 }

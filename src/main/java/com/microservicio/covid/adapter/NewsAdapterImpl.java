@@ -1,10 +1,8 @@
 package com.microservicio.covid.adapter;
 
-import com.microservicio.covid.controller.NewsController;
-import com.microservicio.covid.model.dto.NewsDTO;
 import com.microservicio.covid.model.entity.News;
 import com.microservicio.covid.model.entity.NewsWrapper;
-import com.microservicio.covid.service.NewsServiceDao;
+import com.microservicio.covid.model.dao.NewsDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,95 +13,90 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
-@Qualifier(value = "webhoseAdapter")
+@Qualifier(value = "web_hose_adapter")
 public class NewsAdapterImpl implements NewsAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewsAdapterImpl.class);
+    private static final String REQUEST_PARAMETER = "coronavirus casos positivos  language:spanish thread.country:AR thread.site_type:news thread.site:telefenoticias.com.ar thread.title:Coronavirus en Argentina";
+    private static final String SORT = "crawled";
+    private static final String HEADER_APPLICATION_JSON = "application/json";
+    private static final String HEADER_CONTENT_TYPE = "Content-Type";
     @Value("${news.default.url}")
     private String newsApiUrl;
     @Value("${news.default.token}")
     private String newsToken;
-    private static final String  REQUEST_PARAMETER = "coronavirus casos positivos  language:spanish thread.country:AR thread.site_type:news thread.site:telefenoticias.com.ar thread.title:Coronavirus en Argentina";
-    private static final String  SORT = "crawled";
-
-    private static final String HEADER_APPLICATION_JSON = "application/json";
-    private static final String HEADER_CONTENT_TYPE = "Content-Type";
-
     @Autowired
-    private NewsServiceDao newsServiceDao;
+    @Qualifier("jpa")
+    private NewsDao newsDao;
 
     @Override
-    public NewsWrapper getNews(NewsDTO newsDTO) {
+    public NewsWrapper getNews(Date published) {
 
         NewsWrapper newsList = new NewsWrapper();
-        newsList.setPosts( newsServiceDao.findByPublished(newsDTO.getPublished()));
 
-        if (!newsList.getPosts().isEmpty()){
-            LOGGER.info("Existed news for the date {} consulting.", newsDTO.getPublished());
+        List<News> news = newsDao.findByPublished(published);
+        if (!CollectionUtils.isEmpty(news)) {
+            newsList.setPosts(news);
+            LOGGER.info("Existed news for the date {} consulting.", news);
             return newsList;
         }
 
         //Headers
-        MultiValueMap headersMap = new LinkedMultiValueMap();
+        MultiValueMap<String, String> headersMap = new LinkedMultiValueMap<>();
         headersMap.add(HEADER_CONTENT_TYPE, HEADER_APPLICATION_JSON);
 
-         Map<String, String> urlParams = new HashMap<>();
+        Map<String, String> urlParams = new HashMap<>();
         urlParams.put("q", REQUEST_PARAMETER);
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(newsApiUrl)
                 .queryParam("token", newsToken)
-                .queryParam( "format", "json")
-                .queryParam( "sort", SORT)
+                .queryParam("format", "json")
+                .queryParam("sort", SORT)
                 .encode();
 
         LOGGER.info("log request headers");
-        LOGGER.info(headersMap.toString());
-
-        LOGGER.info("log request ");
-        LOGGER.info(uriBuilder.buildAndExpand(urlParams).toUriString());
-        HttpEntity newsRequestEntity = new HttpEntity(headersMap);
+        String uri = uriBuilder.buildAndExpand(urlParams).toUriString();
+        LOGGER.info(uri);
+        HttpEntity<String> newsRequestEntity = new HttpEntity<>(headersMap);
 
         RestTemplate restTemplate = createRestTemplate();
-        ResponseEntity newsResponseEntity;
+        ResponseEntity<NewsWrapper> newsResponseEntity;
 
         try {
-            LOGGER.info("Request =");
-            LOGGER.info(uriBuilder.toString() + HttpMethod.GET.toString() + newsRequestEntity.toString() );
+            LOGGER.info("Request = {}", newsRequestEntity);
             newsResponseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(urlParams).toUri(), HttpMethod.GET, newsRequestEntity, NewsWrapper.class);
-            if (newsResponseEntity == null || newsResponseEntity.getBody() == null) {
+            if (StringUtils.isEmpty(newsResponseEntity.getBody())) {
                 LOGGER.error("News information are missing in the response.");
-                throw new Exception("News information are missing in the response.");
+                throw new NullPointerException("News information are missing in the response.");
             }
-            newsList = (NewsWrapper) newsResponseEntity.getBody();
-            for (News news: newsList.getPosts()) {
-
-                News ResponseNews = news;
-
-                newsServiceDao.save(ResponseNews);
-            }
-            return newsList;
-        } catch (Exception e) {
-            e.printStackTrace();
+                newsList = newsResponseEntity.getBody();
+                newsDao.saveAll(newsList.getPosts());
+                return newsList;
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("The argument to be save is illegal or inappropriate.",e.getCause());
         }
         return null;
     }
 
     @Override
-    public NewsWrapper getNewsBySource(NewsDTO newsDto) {
+    public NewsWrapper getNewsBySite(String site) {
 
         NewsWrapper newsBySource = new NewsWrapper();
         LOGGER.info("Obtain news information for a given source.");
-        newsBySource.setPosts( newsServiceDao.findBySource(newsDto.getSite()));
+        newsBySource.setPosts(newsDao.findBySite(site));
         return newsBySource;
     }
 
