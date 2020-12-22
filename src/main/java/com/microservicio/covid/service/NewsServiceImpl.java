@@ -52,7 +52,7 @@ public class NewsServiceImpl implements NewsService {
 
     private Date publishedParse(String published) {
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
-        Date publishedParse = new Date();
+        Date publishedParse = null;
         try {
             if (StringUtils.isEmpty(published)){
                 throw new NullPointerException("The published date can not be empty.");
