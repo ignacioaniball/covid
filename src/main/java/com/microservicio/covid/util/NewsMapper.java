@@ -13,10 +13,10 @@ public class NewsMapper implements RowMapper<News> {
         News news = new News();
         news.setId(rs.getInt("id"));
         news.setPublished(rs.getDate("create_at"));
-        news.setAuthor(rs.getString("news_author"));
-        news.setTitle(rs.getString("news_title"));
-        news.setUrl(rs.getString("news_url"));
-        news.setUuid(rs.getString("news_uuid"));
+        news.setAuthor(rs.getString("author"));
+        news.setTitle(rs.getString("title"));
+        news.setUrl(rs.getString("url"));
+        news.setUuid(rs.getString("uuid"));
         //news.(rs.getString("site_full"));
         return news;
     }

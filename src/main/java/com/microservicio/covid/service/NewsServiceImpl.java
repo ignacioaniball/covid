@@ -2,7 +2,6 @@ package com.microservicio.covid.service;
 
 import com.microservicio.covid.adapter.AdapterFactory;
 import com.microservicio.covid.adapter.NewsAdapter;
-import com.microservicio.covid.model.dto.NewsDTO;
 import com.microservicio.covid.model.entity.NewsWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ import java.util.Locale;
 public class NewsServiceImpl implements NewsService {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private NewsDTO newsDto = new NewsDTO();
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsServiceImpl.class);
     private NewsAdapter adapter;
     @Value("${news.default.adapter}")
@@ -32,19 +30,17 @@ public class NewsServiceImpl implements NewsService {
     public NewsWrapper getNewsWrapperData(String published) {
         initAdapter();
         LOGGER.info("Get news service. Default adapter: {}.", defaultAdapter);
-        newsDto.setPublished(publishedParse(published));
-        return adapter.getNews(newsDto);
+        return adapter.getNews(publishedParse(published));
     }
 
     @Override
-    public NewsWrapper getNewsBySource(String source){
+    public NewsWrapper getNewsBySource(String webSite){
         initAdapter();
-        LOGGER.info("Obtaining news information for a given source: {}.", source);
-        newsDto.setSite(source);
-        return adapter.getNewsBySource(newsDto);
+        LOGGER.info("Obtaining news information for a given webSite: {}.", webSite);
+        return adapter.getNewsBySource(webSite);
     }
 
-    protected void initAdapter(){
+    private void initAdapter(){
         try {
             if (adapter == null) {
                 adapter = adapterFactory.getAdapter(defaultAdapter);

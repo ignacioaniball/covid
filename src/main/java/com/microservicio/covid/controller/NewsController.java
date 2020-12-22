@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 public class NewsController {
 
-    private NewsWrapper newsWrapper = new NewsWrapper();
     @Autowired
     private NewsService service;
 
@@ -30,8 +29,7 @@ public class NewsController {
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK")})
     public ResponseEntity<NewsWrapper> getNews(
             @ApiParam(name = "published", value = "Date published of news.", required = true) @RequestParam(required = true) String published){
-            newsWrapper = service.getNewsWrapperData(published);
-            return new ResponseEntity<>(newsWrapper, HttpStatus.OK);
+            return new ResponseEntity<>(service.getNewsWrapperData(published), HttpStatus.OK);
     }
 
     @GetMapping(value = "/news/filter/source", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,8 +39,7 @@ public class NewsController {
             @ApiParam(name = "source", value = "source of news.", required = true) @RequestParam(required = true) String source,
             @ApiParam(name = "title", value = "title of news.", required = false) @RequestParam(required = false) String title,
             @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published){
-            newsWrapper = service.getNewsBySource(source);
-        return new ResponseEntity<>(newsWrapper, HttpStatus.OK);
+        return new ResponseEntity<>(service.getNewsBySource(source), HttpStatus.OK);
     }
 
 }

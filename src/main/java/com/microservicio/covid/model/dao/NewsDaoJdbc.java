@@ -6,33 +6,66 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
-@Service
-public class NewsDaoJdbc {
+@Repository
+public class NewsDaoJdbc implements NewsDao{
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
     public static final Logger LOGGER = LoggerFactory.getLogger(NewsDaoJdbc.class);
 
     public List<News> findByDate(Date published) {
-        String newsDateQuery = "SELECT * FROM news WHERE create_at = ? ";
-        String publishedDateRequest = published.toInstant().toString().split("T")[0];
-        List<News> newsList = jdbcTemplate.query(newsDateQuery, new NewsMapper(), publishedDateRequest);
+        if (published == null) {
+            throw new NullPointerException("The published date can not be empty.");
+        }
+        String newsDateQuery = "SELECT * FROM news WHERE create_at = ?";
+        List<News> newsList = jdbcTemplate.query(newsDateQuery, new NewsMapper(), published);
         LOGGER.info("The query executed was: {}\n", newsDateQuery);
-        LOGGER.info("Obtain news with given source: {}", newsList);
         return newsList;
     }
 
-    public List<News> findBySource(String source) {
+    public List<News> findByWebSite(String webSite) {
+        if (webSite.isEmpty()) {
+            throw new NullPointerException("The webSite variable can not be empty.");
+        }
         String newsSourceQuery = "SELECT * FROM news WHERE site_full = ? ";
-        String findBySourceRequest = source.toLowerCase();
+        String findBySourceRequest = webSite.toLowerCase();
         List<News> newsBySource = jdbcTemplate.query(newsSourceQuery, new NewsMapper(), findBySourceRequest);
         LOGGER.info("The query executed was: {}\n", newsSourceQuery);
-        LOGGER.info("Obtain news with given source: {}", newsBySource);
         return newsBySource;
+    }
+
+    @Override
+    public List<News> findAll() {
+        return null;
+    }
+
+    @Override
+    public void save(News post) {
+
+    }
+
+    @Override
+    public void saveAll(List<News> newsList) {
+
+    }
+
+    @Override
+    public News findOne(Long id) {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
+    public List<News> findByPublished(Date published) {
+        return null;
     }
 }

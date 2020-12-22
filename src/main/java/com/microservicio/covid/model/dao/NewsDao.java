@@ -1,4 +1,4 @@
-package com.microservicio.covid.service;
+package com.microservicio.covid.model.dao;
 
 import com.microservicio.covid.model.entity.News;
 
@@ -19,5 +19,5 @@ public interface NewsDao {
 
     List<News> findByPublished(Date published);
 
-    List<News> findBySource(String source);
+    List<News> findByWebSite(String source);
 }

@@ -1,17 +1,15 @@
-package com.microservicio.covid.service;
+package com.microservicio.covid.model.dao;
 
-import com.microservicio.covid.model.dao.NewsDaoJdk;
-import com.microservicio.covid.model.dao.NewsDaoJdbc;
 import com.microservicio.covid.model.entity.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
 
-@Service
-public class NewsDaoImpl implements NewsDao {
+@Repository
+public class NewsDaoJpa implements NewsDao {
 
     @Autowired
     private NewsDaoJdk newsDao;
@@ -53,7 +51,7 @@ public class NewsDaoImpl implements NewsDao {
     }
 
     @Override
-    public List<News> findBySource(String source) {
-        return newsJdbcDao.findBySource(source);
+    public List<News> findByWebSite(String source) {
+        return newsJdbcDao.findByWebSite(source);
     }
 }

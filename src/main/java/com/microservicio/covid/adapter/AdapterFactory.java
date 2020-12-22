@@ -2,11 +2,11 @@ package com.microservicio.covid.adapter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
-@Service
+@Component
 public class AdapterFactory {
 
     @Autowired
@@ -15,13 +15,10 @@ public class AdapterFactory {
 
     public NewsAdapter getAdapter(String adapterName) {
         NewsAdapterEnum newsAdapterEnum = NewsAdapterEnum.valueOf(adapterName.toUpperCase(Locale.getDefault()));
-        switch(newsAdapterEnum){
-            case WEB_HOSE_ADAPTER:
-                return newsAdapter;
-
-            default:
-                throw new NullPointerException("Error to obtaining adapter, adapter name should not be null.");
-
-        }
+        if (newsAdapterEnum.name().equalsIgnoreCase("WEB_HOSE_ADAPTER")) {
+            return newsAdapter;
+        } else
+            throw new NullPointerException("Error to obtaining adapter, adapter name should not be null.");
     }
 }
+

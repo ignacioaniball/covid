@@ -1,9 +1,8 @@
 package com.microservicio.covid.adapter;
 
-import com.microservicio.covid.model.dto.NewsDTO;
 import com.microservicio.covid.model.entity.News;
 import com.microservicio.covid.model.entity.NewsWrapper;
-import com.microservicio.covid.service.NewsDao;
+import com.microservicio.covid.model.dao.NewsDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,14 +42,14 @@ public class NewsAdapterImpl implements NewsAdapter {
     private NewsDao newsDao;
 
     @Override
-    public NewsWrapper getNews(NewsDTO newsDTO) {
+    public NewsWrapper getNews(Date published) {
 
         NewsWrapper newsList = new NewsWrapper();
 
-        List<News> news = newsDao.findByPublished(newsDTO.getPublished());
+        List<News> news = newsDao.findByPublished(published);
         if (!CollectionUtils.isEmpty(news)) {
-            newsList.setPosts(newsDao.findByPublished(newsDTO.getPublished()));
-            LOGGER.info("Existed news for the date {} consulting.", newsDTO.getPublished());
+            newsList.setPosts(news);
+            LOGGER.info("Existed news for the date {} consulting.", news);
             return newsList;
         }
 
@@ -84,18 +84,18 @@ public class NewsAdapterImpl implements NewsAdapter {
                 newsList = newsResponseEntity.getBody();
                 newsDao.saveAll(newsList.getPosts());
                 return newsList;
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("News information can not be null.",e.getCause());
         }
         return null;
     }
 
     @Override
-    public NewsWrapper getNewsBySource(NewsDTO newsDto) {
+    public NewsWrapper getNewsBySource(String webSite) {
 
         NewsWrapper newsBySource = new NewsWrapper();
         LOGGER.info("Obtain news information for a given source.");
-        newsBySource.setPosts(newsDao.findBySource(newsDto.getSite()));
+        newsBySource.setPosts(newsDao.findByWebSite(webSite));
         return newsBySource;
     }
 
