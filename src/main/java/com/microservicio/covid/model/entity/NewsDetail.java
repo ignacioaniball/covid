@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -44,11 +43,6 @@ public class NewsDetail implements Serializable {
 
     @JsonProperty("url")
     private String url;
-
-    @NotEmpty
-    @Column(name = "source")
-    @JsonProperty("site_full")
-    private String siteFull;
 
     @JsonProperty("site")
     private String site;
@@ -110,14 +104,6 @@ public class NewsDetail implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getSiteFull() {
-        return siteFull;
-    }
-
-    public void setSiteFull(String siteFull) {
-        this.siteFull = siteFull;
     }
 
     public String getSite() {

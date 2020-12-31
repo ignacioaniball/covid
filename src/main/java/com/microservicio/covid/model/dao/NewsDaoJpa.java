@@ -15,7 +15,7 @@ public class NewsDaoJpa implements NewsDao {
     private NewsDaoJdk newsDao;
 
     @Autowired
-    private NewsDaoJdbc newsJdbcDao;
+    private NewsDaoJdbc newsDaoJdbc;
 
     @Override
     public List<News> findAll() {
@@ -43,15 +43,18 @@ public class NewsDaoJpa implements NewsDao {
 
         newsDao.deleteById(id);
     }
-
+/*
+    TODO Hay que realizar la implematación con JPA de los metodos findByPublished y findBySite porque estan llamando
+    a la implementacion hecha en JDBC.
+ */
     @Override
     @Query
     public List<News> findByPublished(Date published) {
-        return newsJdbcDao.findByDate(published);
+        return newsDaoJdbc.findByDate(published);
     }
 
     @Override
-    public List<News> findBySite(String source) {
-        return newsJdbcDao.findBySite(source);
+    public List<News> findBySite(String site) {
+        return newsDaoJdbc.findBySite(site);
     }
 }

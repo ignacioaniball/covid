@@ -80,6 +80,7 @@
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -104,5 +105,4 @@
             </plugin>
         </plugins>
 	</build>
-
 </project>

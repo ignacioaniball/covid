@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CovidControllerTest {
 
     @Test
-    //@DisplayName("getNews with valid value.")
     void getNewsWithValidValue(){
 
     }

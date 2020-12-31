@@ -1,33 +1,54 @@
 package com.microservicio.covid.unitTest;
 
 import com.microservicio.covid.adapter.AdapterFactory;
+import com.microservicio.covid.adapter.NewsAdapter;
+import com.microservicio.covid.adapter.NewsAdapterImpl;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
 class AdapterFactoryTest {
 
+    //Al usar @InjectMocks, mockito se encarga de instanciar el AdapterFactory, por lo que no hay que usar new.
+    //Tambien injecta las variables anotadas con @Mock.
     @InjectMocks
-    @Autowired
     private AdapterFactory adapterFactory;
 
+    @Mock
+    private NewsAdapterImpl adapter;
+
+//    Esta forma de inicializar los @Mock para luego ser injectados por @InjectMock funciona tanto para junit4/5.
+//   @BeforeEach
+//    public void init() {
+//        MockitoAnnotations.initMocks(this);
+//    }
+
     @Test
-    void testGetAdapterWithValidAdapter() {
-        adapterFactory.getAdapter("WEB_HOSE_ADAPTER");
+    void testGetAdapterWithValidArgumentShouldReturnAdapterTest() {
+        NewsAdapter newsAdapter = adapterFactory.getAdapter("WEB_HOSE_ADAPTER");
+        assertNotNull(newsAdapter);
     }
 
     @Test
-    void testGetAdapterWithNullArgument() {
+    void testGetAdapterWithNullArgumentShouldThrowExceptionTest() {
         Exception exception = assertThrows(NullPointerException.class, () ->
                 adapterFactory.getAdapter(null));
-        exception.getMessage();
+        assertNotNull(adapterFactory);
+        assertEquals("Error to obtain adapter, adapter name should not be null.", exception.getMessage() );
     }
 
     @Test
-    void testGetAdapterWithInvalidArgument() {
+    void testGetAdapterWithInvalidArgumentShouldThrowExceptionTest() {
         Exception exception = assertThrows(NullPointerException.class, () ->
                 adapterFactory.getAdapter("Invalid_Adapter"));
+        assertNotNull(adapterFactory);
+        assertEquals("Error to obtain adapter, adapter name should not be null.", exception.getMessage() );
     }
 }

@@ -19,5 +19,5 @@ public interface NewsDao {
 
     List<News> findByPublished(Date published);
 
-    List<News> findBySite(String source);
+    List<News> findBySite(String site);
 }
