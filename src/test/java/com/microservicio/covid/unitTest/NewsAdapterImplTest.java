@@ -8,25 +8,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.List;
 
-@ExtendWith({MockitoExtension.class})
-@ContextConfiguration(classes = NewsAdapterImpl.class)
-@TestPropertySource(locations ="classpath:tests.properties")
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+@TestPropertySource(locations ="classpath:newsAdapterImplTest.properties")
+@ActiveProfiles("Test")
 public class NewsAdapterImplTest {
 
-    @Value("${news.default.url}")
-    private String newsApiUrl;
-
+    @Autowired
     @InjectMocks
-    NewsAdapterImpl newsAdapter = new NewsAdapterImpl();
+    NewsAdapterImpl newsAdapter;
 
     @Mock
     NewsDaoJpa newsDaoJpa;
@@ -35,8 +34,8 @@ public class NewsAdapterImplTest {
     @Disabled
     void getNewsWithValidValueReturnNewsTest() {
         Date actualDate = Date.from(Instant.now());
-        List listNews = null;
-        Mockito.when(newsDaoJpa.findByPublished(actualDate)).thenReturn(listNews);
+        Mockito.when(newsDaoJpa.findByPublished(actualDate)).thenReturn(null);
+        Mockito.when(newsAdapter.getNews(actualDate)).thenReturn(null);
         newsAdapter.getNews(actualDate);
     }
 }
