@@ -33,11 +33,11 @@ public class NewsDaoJdbc implements NewsDao{
         if (StringUtils.isEmpty(site)) {
             throw new NullPointerException("The site variable can not be empty.");
         }
-        String newsSourceQuery = "SELECT * FROM news WHERE site_full = ? ";
-        String findBySourceRequest = site.toLowerCase();
-        List<News> newsBySource = jdbcTemplate.query(newsSourceQuery, new NewsMapper(), findBySourceRequest);
-        LOGGER.info("The query executed was: {}\n", newsSourceQuery);
-        return newsBySource;
+        String newsSiteQuery = "SELECT * FROM news WHERE site_full = ? ";
+        String findBySiteRequest = site.toLowerCase();
+        List<News> newsBySite = jdbcTemplate.query(newsSiteQuery, new NewsMapper(), findBySiteRequest);
+        LOGGER.info("The query executed was: {}\n", newsSiteQuery);
+        return newsBySite;
     }
 
     @Override

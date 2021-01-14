@@ -1,8 +1,8 @@
 package com.microservicio.covid.adapter;
 
+import com.microservicio.covid.model.dao.NewsDao;
 import com.microservicio.covid.model.entity.News;
 import com.microservicio.covid.model.entity.NewsWrapper;
-import com.microservicio.covid.model.dao.NewsDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +21,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @Qualifier(value = "web_hose_adapter")
 public class NewsAdapterImpl implements NewsAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsAdapterImpl.class);
-    private static final String REQUEST_PARAMETER = "coronavirus casos positivos  language:spanish thread.country:AR thread.site_type:news thread.site:telefenoticias.com.ar thread.title:Coronavirus en Argentina";
+    @Value("${news.default.request_parameter}")
+    private String REQUEST_PARAMETER;
     private static final String SORT = "crawled";
     private static final String HEADER_APPLICATION_JSON = "application/json";
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
@@ -50,7 +49,7 @@ public class NewsAdapterImpl implements NewsAdapter {
         List<News> news = newsDao.findByPublished(published);
         if (!CollectionUtils.isEmpty(news)) {
             newsList.setPosts(news);
-            LOGGER.info("Existed news for the date {} consulting.", news);
+            LOGGER.info("Existed {} news for the date consulting.", news.size());
             return newsList;
         }
 
@@ -58,18 +57,16 @@ public class NewsAdapterImpl implements NewsAdapter {
         MultiValueMap<String, String> headersMap = new LinkedMultiValueMap<>();
         headersMap.add(HEADER_CONTENT_TYPE, HEADER_APPLICATION_JSON);
 
-        Map<String, String> urlParams = new HashMap<>();
-        urlParams.put("q", REQUEST_PARAMETER);
-
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(newsApiUrl)
                 .queryParam("token", newsToken)
                 .queryParam("format", "json")
                 .queryParam("sort", SORT)
+                .queryParam("q", REQUEST_PARAMETER)
                 .encode();
 
-        LOGGER.info("log request headers");
-        String uri = uriBuilder.buildAndExpand(urlParams).toUriString();
-        LOGGER.info(uri);
+        LOGGER.debug("log request headers");
+        String uri = uriBuilder.buildAndExpand().toUriString();
+        LOGGER.debug(uri);
         HttpEntity<String> newsRequestEntity = new HttpEntity<>(headersMap);
 
         RestTemplate restTemplate = createRestTemplate();
@@ -77,7 +74,7 @@ public class NewsAdapterImpl implements NewsAdapter {
 
         try {
             LOGGER.info("Request = {}", newsRequestEntity);
-            newsResponseEntity = restTemplate.exchange(uriBuilder.buildAndExpand(urlParams).toUri(), HttpMethod.GET, newsRequestEntity, NewsWrapper.class);
+            newsResponseEntity = restTemplate.exchange(uriBuilder.buildAndExpand().toUri(), HttpMethod.GET, newsRequestEntity, NewsWrapper.class);
             if (StringUtils.isEmpty(newsResponseEntity.getBody())) {
                 LOGGER.error("News information are missing in the response.");
                 throw new NullPointerException("News information are missing in the response.");

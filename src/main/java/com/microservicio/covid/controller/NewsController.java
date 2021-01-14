@@ -32,14 +32,14 @@ public class NewsController {
             return new ResponseEntity<>(service.getNewsWrapperData(published), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/news/filter/source", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/news/filter/site", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Retrieve News information from provider with the filter sending",
             notes = "News from Argentinian country.", response = News.class)
     public ResponseEntity<NewsWrapper> getNewsFilter(
-            @ApiParam(name = "source", value = "source of news.", required = true) @RequestParam(required = true) String source,
+            @ApiParam(name = "site", value = "site of news.", required = true) @RequestParam(required = true) String site,
             @ApiParam(name = "title", value = "title of news.", required = false) @RequestParam(required = false) String title,
             @ApiParam(name = "published", value = "Date published of news.", required = false) @RequestParam(required = false) String published){
-        return new ResponseEntity<>(service.getNewsBySite(source), HttpStatus.OK);
+        return new ResponseEntity<>(service.getNewsBySite(site), HttpStatus.OK);
     }
 
 }

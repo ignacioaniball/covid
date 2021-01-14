@@ -15,14 +15,9 @@ import java.util.Date;
 @Table(name = "news")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "uuid",
-        "url",
         "thread",
-        "parent_url",
         "author",
         "published",
-        "title",
-        "text",
         "language"
 })
 public class News implements Serializable {
@@ -33,29 +28,9 @@ public class News implements Serializable {
     private long id;
 
     @NotEmpty
-    @Column(name = "uuid")
-    @JsonProperty("news_uuid")
-    private String uuid;
-
-    @NotEmpty
-    @Column(name = "url")
-    @JsonProperty("news_url")
-    private String url;
-
-    @NotEmpty
     @OneToOne(cascade = {CascadeType.ALL})
     @JsonProperty("thread")
     private NewsDetail newsDetail;
-
-    @NotEmpty
-    @Column(name = "title")
-    @JsonProperty("news_title")
-    private String title;
-
-    @NotEmpty
-    @Column(name = "author")
-    @JsonProperty("news_author")
-    private String author;
 
     @NotEmpty
     @Column
@@ -81,38 +56,6 @@ public class News implements Serializable {
         this.id = id;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public Date getPublished() {
         return published;
     }
@@ -123,6 +66,14 @@ public class News implements Serializable {
 
     public NewsDetail getNewsDetail() {
         return newsDetail;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public void setNewsDetail(NewsDetail newsDetail) {
